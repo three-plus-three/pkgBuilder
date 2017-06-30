@@ -1,0 +1,49 @@
+{
+  "base_path": "/pkg",
+  "image_url": "$/images/bxh.jpg",
+  "height": "800px",
+  "width": "100%",
+  "includes":["/func.js"],
+  "objects": [
+    {
+      "image_url": "$/images/dt.jpg",
+      "x": "100px",
+      "y": "100px",
+      "height": "1000px",
+      "width": "1000px",
+      "objects": [
+        {
+          "image_url": "$/images/jh.jpg",
+          "x": "100px",
+          "y": "100px",
+          "height": "600px",
+          "width": "600px",
+          "objects": [
+            {
+              "image_url": "$/images/kl.jpg",
+              "x": "120px",
+              "y": "120px",
+              "height": "300px",
+              "width": "300px",
+              "instance": {
+                "type": "interface",
+                "metric_name": "interface_status",
+                "paths": [{"name": "if_index", "value": "12"}],
+                "color": {
+                  "function": "interfaceStatusToColor"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "image_url": "$/images/qe.jpg",
+          "x": "200",
+          "y": "200px",
+          "height": "50px",
+          "width": "50px"
+        }
+      ]
+    }
+  ]
+}

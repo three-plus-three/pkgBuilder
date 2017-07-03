@@ -1,34 +1,75 @@
 {
   "base_path": "/pkg",
   "image_url": "$/images/bxh.jpg",
-  "height": "800px",
-  "width": "100%",
-  "includes":["/func.js"],
+  "height": "850px",
+  "width": "1304px",
+  "design": {
+    "path": [
+      0
+    ],
+    "text": "背景",
+    "icon": "glyphicon glyphicon-picture"
+  },
+  "includes": [
+    "/func.js"
+  ],
   "objects": [
     {
+      "design": {
+        "path": [
+          0,
+          0
+        ],
+        "text": "第一级",
+        "icon": "glyphicon glyphicon-picture"
+      },
       "image_url": "$/images/dt.jpg",
-      "x": "100px",
-      "y": "100px",
+      "x": "22px",
+      "y": "54px",
       "height": "1000px",
       "width": "1000px",
       "objects": [
         {
+          "design": {
+            "path": [
+              0,
+              0,
+              0
+            ],
+            "text": "第二级",
+            "icon": "glyphicon glyphicon-picture"
+          },
           "image_url": "$/images/jh.jpg",
-          "x": "100px",
-          "y": "100px",
+          "x": "331px",
+          "y": "71px",
           "height": "600px",
           "width": "600px",
           "objects": [
             {
+              "design": {
+                "path": [
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "text": "第三级",
+                "icon": "glyphicon glyphicon-picture"
+              },
               "image_url": "$/images/kl.jpg",
-              "x": "120px",
-              "y": "120px",
+              "x": "137px",
+              "y": "114px",
               "height": "300px",
               "width": "300px",
               "instance": {
                 "type": "interface",
                 "metric_name": "interface_status",
-                "paths": [{"name": "if_index", "value": "12"}],
+                "paths": [
+                  {
+                    "name": "if_index",
+                    "value": "12"
+                  }
+                ],
                 "color": {
                   "function": "interfaceStatusToColor"
                 }
@@ -37,6 +78,15 @@
           ]
         },
         {
+          "design": {
+            "path": [
+              0,
+              0,
+              1
+            ],
+            "text": "第二级",
+            "icon": "glyphicon glyphicon-picture"
+          },
           "image_url": "$/images/qe.jpg",
           "x": "200",
           "y": "200px",

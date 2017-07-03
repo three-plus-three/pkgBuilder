@@ -1,6 +1,6 @@
 <template>
   <div style="position:absolute;background-size: 100% 100%;background-repeat: no-repeat;overflow: hidden"
-       :style="style">
+       :style="style" @click.self="edit">
     <span style="cursor: pointer"
           @click="showEdit=true"
           class="glyphicon glyphicon-edit">编辑
@@ -17,6 +17,7 @@
       <img-object
         v-for="(subObj,i) in object.objects"
         :object="subObj"
+        :path="path$(i)"
         v-drag="object.objects[i]"
         v-resize="object.objects[i]"
         @onDrag="$emit('onDrag')"
@@ -76,11 +77,17 @@
     },
 
     props: {
+      path: Array,
       object: Object,
       basePath: String
     },
 
     methods: {
+      edit(){
+        this.$root.$emit("showCompleteInfo", {object: this.object, path: this.path});
+        this.$root.$emit("selectPicture", this.path)
+      },
+
       imageChange(){
         this.object = {...this.object};
         this.$emit('change')
@@ -91,6 +98,12 @@
         this.object.objects.push(v);
         this.showAppend = false;
         this.$emit('change')
+      },
+
+      path$(i){
+        let rest = this.path.slice();
+        rest.push(i.toString());
+        return rest
       }
     },
 
@@ -108,8 +121,11 @@
       },
 
       image_url (){
-        var splitUrl = this.object.image_url.split(".");
-        return splitUrl[0] + this.img_color + "." + splitUrl[1]
+        if (this.object.image_url) {
+          var splitUrl = this.object.image_url.split(".");
+          return splitUrl[0] + this.img_color + "." + splitUrl[1]
+        }
+        return ""
       }
     },
 

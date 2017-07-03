@@ -11,11 +11,11 @@ Vue.directive("drag", {
   bind (el, binding, vnode) {
     $(el).draggable({
       drag: function (event, ui) {
-        if(binding.value){
-          binding.value.x = ui.position.left +"px" ;
-          binding.value.y = ui.position.top +"px" ;
+        if (binding.value) {
+          binding.value.x = ui.position.left + "px";
+          binding.value.y = ui.position.top + "px";
         }
-        vnode.componentInstance &&  vnode.componentInstance.$emit("onDrag")
+        vnode.componentInstance && vnode.componentInstance.$emit("onDrag")
       }
     })
   },
@@ -29,7 +29,7 @@ Vue.directive("resize", {
   bind (el, binding, vnode) {
     $(el).resizable({
       resize: function (event, ui) {
-        if(binding.value){
+        if (binding.value) {
           binding.value.width = ui.size.width + "px";
           binding.value.height = ui.size.height + "px";
         }
@@ -40,6 +40,32 @@ Vue.directive("resize", {
   unbind(el){
     $(el).resize("destroy")
   }
+});
+
+Vue.component("jsTree", {
+  render(h){
+    return <div></div>
+  }
+});
+
+Vue.directive("tree", {
+  bind(el, binding, vnode) {
+    var instance = $(el).jstree(
+      {
+        core: {
+          data: binding.value
+        }
+      }
+    );
+    $(el).on("select_node.jstree", function () {
+        vnode.componentInstance.$emit("selectNode", arguments[1])
+      }
+    );
+    console.log(instance)
+  },
+  update(el, binding){
+
+  },
 });
 
 new Vue({

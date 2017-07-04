@@ -50,26 +50,25 @@ Vue.component("jsTree", {
 
 Vue.directive("tree", {
   bind(el, binding, vnode) {
-    var instance = $(el).jstree(
+    $(el).jstree(
       {
         core: {
+          check_callback: true,
           data: binding.value
         }
       }
     );
     $(el).on("select_node.jstree", function () {
-        vnode.componentInstance.$emit("selectNode", arguments[1])
-      }
-    );
-    console.log(instance)
-  },
-  update(el, binding){
-
-  },
+      vnode.componentInstance.$emit("selectNode", arguments[1])
+    });
+    vnode.componentInstance.$emit("treeMounted", $(el).jstree(true))
+  }
 });
 
 new Vue({
   el: '#app',
-  template: '<App/>',
+  render(){
+    return <App/>
+  },
   components: {App}
 });

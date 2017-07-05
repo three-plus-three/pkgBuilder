@@ -1,1 +1,16 @@
-{"base_path":"/pkg","image_url":"$/images/bxh.jpg","height":"850px","width":"1304px","design":{"path":[0],"text":"背景"},"includes":["/func.js"],"objects":[{"width":"614px","x":"241px","y":"250px","height":"425px","image_url":"$/images/kl.jpg","design":{"path":[0,0],"text":"avc"},"objects":[{"width":"268px","x":"295px","y":"43px","height":"189px","image_url":"$/images/qe.jpg","design":{"path":[0,0,0],"text":"abc"}},{"width":"218px","x":"-13px","y":"114px","height":"168px","image_url":"$/images/qe.jpg","design":{"path":[0,0,1],"text":"abc"}},{"width":"447px","x":"73px","y":"193px","height":"215px","image_url":"$/images/dt.jpg","design":{"path":[0,0,2],"text":"abc"},"objects":[{"width":"184px","x":"153px","y":"63px","height":"100px","image_url":"$/images/dt.jpg","design":{"path":[0,0,2,0],"text":"abc"}}]},{"width":"110px","x":"453px","y":"276px","height":"127px","image_url":"$/images/qe.jpg","design":{"path":[0,0,3],"text":"abc"}},{"width":"194px","x":"119px","y":"42px","height":"131px","image_url":"$/images/qe.jpg","design":{"path":[0,0,4],"text":"abc"}},{"width":"100px","x":"564px","y":"168px","height":"100px","image_url":"$/images/qe.jpg","design":{"path":[0,0,5],"text":"abc"}},{"width":"100px","x":"481px","y":"42px","height":"100px","image_url":"$/images/qe.jpg","design":{"path":[0,0,6],"text":"abc"}},{"width":"100px","x":"552px","y":"322px","height":"100px","image_url":"$/images/dt.jpg","design":{"path":[0,0,7],"text":"abc"}}]},{"width":"100px","x":"917px","y":"398px","height":"100px","image_url":"$/images/kl.jpg","design":{"path":[0,1],"text":"avc"}},{"width":"100px","x":"914px","y":"185px","height":"100px","image_url":"$/images/kl.jpg","design":{"path":[0,2],"text":"avc"}}]}
+{
+  "base_path": "/pkg",
+  "image_url": "$/images/bxh.jpg",
+  "height": "850px",
+  "width": "1304px",
+  "design": {
+    "path": [
+      0
+    ],
+    "text": "背景"
+  },
+  "includes": [
+    "/func.js"
+  ],
+  "objects": []
+}

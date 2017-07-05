@@ -140,11 +140,6 @@
     },
 
     methods: {
-      path$(){
-        var path = this.panelConfig.design.path.slice();
-        return path
-      },
-
       selectNode(v){
         this.$root.$emit('showCompleteInfo', {
             path: v.node.id.split("-")
@@ -175,15 +170,14 @@
           parentPath = this.searchObjectByPath(selected.parent.split("-")),
           childPath = selected.id.split("-"),
           index = childPath[childPath.length - 1];
-
-        new Function(`${parentPath}.objects.splice(${index},1)`).call(this);
+        new Function(`${parentPath}.objects.splice(${index},1);`).call(this);
         this.panelConfig = {...this.panelConfig};
 
-        instance.delete_node(selected)
+        instance.delete_node(selected);
         let parent = instance.get_node(selected.parent);
         this.resetChildrenId(instance, parent);
-        console.log(parent)
-
+        this.$root.$emit("nodeUpdate");
+        this.onJsonChange()
       },
 
       appendChild(object){
@@ -258,11 +252,11 @@
 
         if (!~~repeat)return;
 
-        let objectChildren = this.searchObjectByPath(selected.original.path) + ".objects";
+        let objectChildren = this.searchObjectByPath(selected.id.split("-")) + ".objects";
         let funcString = `(${objectChildren} = ${objectChildren} || []) ; ${objectChildren}.push(v)`;
 
         for (var i = 0; i < parseInt(repeat); i++) {
-          let path = selected.original.path;
+          let path = selected.id.split("-");
           let childPath = path.slice();
           childPath.push(selected.children.length);
           var options = {
@@ -274,6 +268,8 @@
           instance.create_node(selected.id, options);
           new Function("v", funcString).call(this, {width, x, y, height, image_url, design: {path: childPath, text}})
         }
+        this.onJsonChange();
+        this.$root.$emit("nodeUpdate");
       });
 
       this.$root.$on("selectPicture", path => {
@@ -283,8 +279,28 @@
       });
 
       this.$watch("object$Edit", v => {
-        let pathString = this.searchObjectByPath(this.path$Edit) + ` = object`;
-        new Function("object", pathString).call(this, v)
+
+        let
+          currentPath = this.searchObjectByPath(this.path$Edit),
+
+          currentPathArray = currentPath.split("["),
+
+          currentPathIndex = currentPathArray[currentPathArray.length - 1].replace("]", "");
+
+        currentPathArray.pop();
+
+        let parentPath = currentPathArray.join("["),
+          pathString = "";
+
+        if (parentPath && currentPathIndex) {
+          //如果不是背景节点   添加的root-level必须用$set 才能响应
+          pathString = `this.$set(${parentPath},${currentPathIndex},object)`;
+        } else {
+          pathString = `${currentPath} = object`;
+        }
+        new Function("object", pathString).call(this, v);
+
+        this.onJsonChange()
       }, {deep: true})
     },
 

@@ -52,15 +52,12 @@
     data (){
       return {
         img_color: "",
-        currentPath: []
+        currentPath: [],
+        object$: this.object
       }
     },
 
     watch: {
-      ["object.image_url"](){
-        this.$emit('change')
-      },
-
       index(){
         this.calcCurrentPath()
       }
@@ -79,6 +76,8 @@
         this.$root.$emit("showCompleteInfo", {path: this.currentPath});
         this.$root.$emit("selectPicture", this.currentPath)
       },
+
+
 
 //      imageChange(){
 //        this.object = {...this.object};
@@ -123,6 +122,10 @@
     },
 
     created(){
+      this.$root.$on("nodeUpdate", ()=> {
+        console.log(this.object)
+        this.$forceUpdate();
+      });
       this.calcCurrentPath()
     },
 

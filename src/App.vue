@@ -1,12 +1,14 @@
 <template>
-  <div class="row">
+  <div>
     <div class="col-md-2">
       <button class="btn btn-info" @click="showAppend=true">添加子节点</button>
       <button class="btn btn-danger" @click="removeNode">删除节点</button>
       <a :href="'data:application/json,'+json" download="export.json"><i class="glyphicon glyphicon-export"></i>
         导出JSON
       </a>
-      <js-tree v-tree="treeData" @selectNode="selectNode" ref="pictureTree" style="margin-top :10px;"></js-tree>
+      <div style="height:400px;">
+        <js-tree v-tree="treeData" @selectNode="selectNode" ref="pictureTree" style="margin-top :10px;"></js-tree>
+      </div>
       <prop-form>
         <tex-field
           v-if="object$Edit.base_path"
@@ -14,6 +16,13 @@
           label-span="4"
           v-model="object$Edit.base_path"
           control-span="7"></tex-field>
+        <textarea-field
+          v-if="object$Edit.includes"
+          label="includes"
+          :is-json="true"
+          label-span="4"
+          v-model="object$Edit.includes"
+          control-span="7"></textarea-field>
         <tex-field
           label="image_url"
           label-span="4"
@@ -41,23 +50,27 @@
           label-span="4"
           v-model="object$Edit.y"
           control-span="7"></tex-field>
+        <textarea-field
+          label="instance"
+          label-span="4"
+          :is-json="true"
+          v-model="object$Edit.instance"
+          control-span="7"></textarea-field>
+        <textarea-field
+          label="backend"
+          label-span="4"
+          :is-json="true"
+          v-model="object$Edit.backend"
+          control-span="7"></textarea-field>
       </prop-form>
     </div>
-    <div class="col-md-8" style="position: relative;">
+    <div class="col-md-10" style="position: relative;">
       <div
         @click.self="$root.$emit('showCompleteInfo',{object: panelConfig});$root.$emit('selectPicture',panelConfig.design.path)"
         :style="style"
         style="background-size: 100% 100%;position:absolute"
         v-resize="panelConfig"
         @onResize="onJsonChange">
-        <!--<span style="cursor: pointer;"-->
-        <!--class="glyphicon glyphicon-plus text-info"-->
-        <!--@click="showAppend=true">添加子对象-->
-        <!--</span>-->
-        <!--<span style="cursor: pointer;"-->
-        <!--@click="showEdit=true"-->
-        <!--class="glyphicon glyphicon-edit text-info">编辑-->
-        <!--</span>-->
 
         <img-object v-for="(obj,i) in panelConfig.objects"
                     :object="obj"
@@ -71,7 +84,6 @@
                     @change="onJsonChange"
                     :base-path="panelConfig.base_path">
         </img-object>
-
         <prop-form @submit="appendChild" :need-validate="false">
           <modal cancel-text="取消" ok-text="确认" v-model="showAppend">
             <tex-field label="名称" name="text"></tex-field>
@@ -79,6 +91,8 @@
             <tex-field label="image_url" name="image_url"></tex-field>
             <tex-field label="width" value="100px" name="width"></tex-field>
             <tex-field label="height" value="100px" name="height"></tex-field>
+            <textarea-field label="instance" name="instance" :is-json="true"></textarea-field>
+            <textarea-field label="backend" name="backend" :is-json="true"></textarea-field>
             <tex-field label="x" value="100px" name="x"></tex-field>
             <tex-field label="y" value="100px" name="y"></tex-field>
             <div slot="footer">
@@ -87,33 +101,6 @@
             </div>
           </modal>
         </prop-form>
-
-        <!--<modal cancel-text="取消" ok-text="确认" :value="showEdit">-->
-        <!--<prop-form>-->
-        <!--<tex-field label="image_url" v-model="panelConfig.image_url" @input="onJsonChange"></tex-field>-->
-        <!--<tex-field label="base_path" v-model="panelConfig.base_path" @input="onJsonChange"></tex-field>-->
-        <!--<tex-field label="includes" v-for="(includes,i) in  panelConfig.includes"-->
-        <!--v-model="panelConfig.includes[i]"-->
-        <!--@input="onJsonChange">-->
-        <!--<label class="control-label col-sm-2">-->
-        <!--<span class="glyphicon glyphicon-remove" style="cursor: pointer"-->
-        <!--@click="panelConfig.includes.splice(i,1);onJsonChange()"></span>-->
-        <!--<span class="glyphicon glyphicon-plus"-->
-        <!--style="cursor: pointer"-->
-        <!--@click="panelConfig.includes.push('');onJsonChange()"-->
-        <!--v-if="panelConfig.includes.length-1 == i"-->
-        <!--&gt;</span>-->
-        <!--</label>-->
-        <!--</tex-field>-->
-        <!--<label v-if="panelConfig.includes.length==0">-->
-        <!--<span class="glyphicon glyphicon-plus" style="cursor: pointer" @click="panelConfig.includes.push('')">添加includes</span>-->
-        <!--</label>-->
-        <!--</prop-form>-->
-        <!--<div slot="footer">-->
-        <!--<button type="button" class="btn btn-default" @click="showEdit=false">取消</button>-->
-        <!--<button type="button" class="btn btn-info" @click="showEdit=false">确认</button>-->
-        <!--</div>-->
-        <!--</modal>-->
       </div>
     </div>
   </div>
@@ -122,8 +109,10 @@
   import imgObject from './components/object'
   import { Modal } from 'uiv'
   import texField from './components/txt_field'
+  import textareaField from './components/textarea_field'
   import propForm from './components/form'
-  var pathReg = /^\$([\/].+)+/;
+
+  const pathReg = /^\$([\/].+)+/;
 
   export default {
     data(){
@@ -132,7 +121,7 @@
         showAppend: false,
         showJSON: false,
         panelConfig: JSON.parse(panelConfig),
-        json: JSON.parse(panelConfig),
+        json: panelConfig,
         treeData: {},
         object$Edit: {},
         path$Edit: []
@@ -191,21 +180,21 @@
       },
 
       calcTreeData(){
-        function calcNodeDesign(config) {
-          var rest = {};
+        function collectNodeDesign(config) {
+          let rest = {};
           rest = {...config.design};
           rest.icon = "glyphicon glyphicon-picture";
           rest.id = rest.path.join("-");
           if (Array.isArray(config.objects)) {
             rest.children = [];
             config.objects.map(obj=> {
-              rest.children.push(calcNodeDesign(obj))
+              rest.children.push(collectNodeDesign(obj))
             })
           }
           return rest
         }
 
-        this.treeData = calcNodeDesign(this.panelConfig);
+        this.treeData = collectNodeDesign(this.panelConfig);
       },
 
       searchObjectByPath(path){
@@ -246,27 +235,36 @@
 
       this.$root.$on("createNode", ({object})=> {
 
-        let [selected,instance] = this.instanceAndFirstSelected();
-
-        let {height,image_url,repeat,text,width,x,y} = object;
+        let
+          [selected,treeInstance] = this.instanceAndFirstSelected(),
+          {height,image_url,instance,backend,repeat,text,width,x,y} = object;
 
         if (!~~repeat)return;
 
         let objectChildren = this.searchObjectByPath(selected.id.split("-")) + ".objects";
         let funcString = `(${objectChildren} = ${objectChildren} || []) ; ${objectChildren}.push(v)`;
 
-        for (var i = 0; i < parseInt(repeat); i++) {
+        for (let i = 0; i < parseInt(repeat); i++) {
           let path = selected.id.split("-");
           let childPath = path.slice();
           childPath.push(selected.children.length);
-          var options = {
+          let options = {
             text,
             path: childPath,
             icon: "glyphicon glyphicon-picture",
             id: childPath.join("-")
           };
-          instance.create_node(selected.id, options);
-          new Function("v", funcString).call(this, {width, x, y, height, image_url, design: {path: childPath, text}})
+          treeInstance.create_node(selected.id, options);
+          new Function("v", funcString).call(this, {
+            width,
+            x,
+            y,
+            backend,
+            height,
+            instance,
+            image_url,
+            design: {path: childPath, text}
+          })
         }
         this.onJsonChange();
         this.$root.$emit("nodeUpdate");
@@ -298,6 +296,7 @@
         } else {
           pathString = `${currentPath} = object`;
         }
+
         new Function("object", pathString).call(this, v);
 
         this.onJsonChange()
@@ -305,6 +304,7 @@
     },
 
     components: {
+      textareaField,
       Modal,
       texField,
       propForm,

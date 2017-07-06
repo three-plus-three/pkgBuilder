@@ -10,7 +10,30 @@
     "text": "背景"
   },
   "includes": [
-    "/func.js"
+    "/funabcc.js"
   ],
-  "objects": []
+  "backend": {},
+  "instance": {},
+  "objects": [
+    {
+      "width": "100px",
+      "x": "254px",
+      "y": "206px",
+      "backend": {
+        "abc": "123"
+      },
+      "height": "100px",
+      "instance": {
+        "abc": "123"
+      },
+      "image_url": "$/images/kl.jpg",
+      "design": {
+        "path": [
+          0,
+          0
+        ],
+        "text": "qe"
+      }
+    }
+  ]
 }

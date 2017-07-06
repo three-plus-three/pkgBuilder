@@ -59,7 +59,7 @@
 
     watch: {
       index(){
-        this.calcCurrentPath()
+        this.resetCurrentPath()
       }
     },
 
@@ -91,7 +91,7 @@
 //        this.$emit('change')
 //      },
 
-      calcCurrentPath(){
+      resetCurrentPath(){
         this.currentPath = this.parentPath.slice();
         this.currentPath.push(this.index);
         this.object.design.path = this.currentPath
@@ -123,10 +123,9 @@
 
     created(){
       this.$root.$on("nodeUpdate", ()=> {
-        console.log(this.object)
         this.$forceUpdate();
       });
-      this.calcCurrentPath()
+      this.resetCurrentPath()
     },
 
     components: {

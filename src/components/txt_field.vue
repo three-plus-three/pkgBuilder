@@ -1,11 +1,12 @@
 <template>
-  <div class="form-group">
+  <div class="form-group" :data-vv-scope="validateScope">
     <label class="control-label" :class="'col-sm-'+labelSpan" v-if="label">{{label}}</label>
     <div :class="{['col-sm-'+controlSpan]:true}">
       <input type="text"
              class="form-control"
              @blur="blur"
-             v-model="innerValue" :name="name"
+             v-model="innerValue"
+             :name="name"
              :value="value"
              :disbaled="disabled"
              :placeholder="placeholder"
@@ -73,9 +74,9 @@
       errorBag: {}
     },
     watch: {
-      //      innerValue(value) {      //监听表单输入事件 <input v-model='innerValue'>
-//        this.$emit('input', value ? value.toString() : value);
-//      },
+            innerValue(value) {      //监听表单输入事件 <input v-model='innerValue'>
+        this.$emit('input', value ? value.toString() : value);
+      },
 
       value(value){
         this.innerValue = value;
@@ -83,8 +84,8 @@
     },
     methods: {
       blur(){//监听失去焦点事件 <input @blur='blur'>
-        this.valueJointedPrefix = this.valuePrefix + this.innerValue;
-        this.$emit('input', this.innerValue);
+//        this.valueJointedPrefix = this.valuePrefix + this.innerValue;
+//        this.$emit('input', this.innerValue);
       },
 
       formValue(newVal) {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="col-md-2">
-      <button class="btn btn-info" @click="showAppend=true">添加子节点</button>
+      <button class="btn btn-info" @click="showAppendModal">添加子节点</button>
       <button class="btn btn-danger" @click="removeNode">删除节点</button>
       <a :href="'data:application/json,'+json" download="export.json"><i class="glyphicon glyphicon-export"></i>
         导出JSON
@@ -91,8 +91,8 @@
             <tex-field label="image_url" name="image_url"></tex-field>
             <tex-field label="width" value="100px" name="width"></tex-field>
             <tex-field label="height" value="100px" name="height"></tex-field>
-            <textarea-field label="instance" name="instance" :is-json="true"></textarea-field>
-            <textarea-field label="backend" name="backend" :is-json="true"></textarea-field>
+            <textarea-field label="instance" value="{}" name="instance" :is-json="true"></textarea-field>
+            <textarea-field label="backend" value="{}" name="backend" :is-json="true"></textarea-field>
             <tex-field label="x" value="100px" name="x"></tex-field>
             <tex-field label="y" value="100px" name="y"></tex-field>
             <div slot="footer">
@@ -140,7 +140,7 @@
         let
           instance = $(this.$refs.pictureTree.$el).jstree(true),
           selected = instance.get_selected(true);
-        if (selected.length === 0)return [[], instance];
+        if (selected.length === 0)return [null, instance];
         return [selected[0], instance];
       },
 
@@ -149,6 +149,12 @@
           let node = instance.get_node(id);
           instance.set_id(node, id.substr(0, id.length - 1) + i.toString())
         })
+      },
+
+      showAppendModal(){
+        let [selected] = this.instanceAndFirstSelected();
+        this.showAppend = !!selected;
+        !selected && alert("请选择一个节点作为父节点")
       },
 
       removeNode(){
@@ -234,7 +240,6 @@
       });
 
       this.$root.$on("createNode", ({object})=> {
-
         let
           [selected,treeInstance] = this.instanceAndFirstSelected(),
           {height,image_url,instance,backend,repeat,text,width,x,y} = object;
@@ -277,6 +282,8 @@
       });
 
       this.$watch("object$Edit", v => {
+        let [selected] = this.instanceAndFirstSelected();
+        if (!selected)return alert("请选择需要编辑的节点");
 
         let
           currentPath = this.searchObjectByPath(this.path$Edit),

@@ -38,7 +38,7 @@ module.exports = merge(baseWebpackConfig, {
       inject: true,
       config: `
       var applicationRoot ="/hengwei"
-      var panelConfig = '${JSON.stringify(mockData)}'
+      var panelConfig = "${JSON.stringify({})}"
      `
     }),
     new FriendlyErrorsPlugin()

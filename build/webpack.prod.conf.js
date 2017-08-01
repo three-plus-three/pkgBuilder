@@ -58,9 +58,10 @@ var webpackConfig = merge(baseWebpackConfig, {
       filename: config.build.index,
       template: 'index.html',
       inject: true,
+      applicationRoot: "{{.applicationRoot}}",
       config: `
-      var applicationRoot = {{.applicationRoot}}
-      var panelConfig = {{.panelConfig}}
+      var applicationRoot = "{{.applicationRoot}}"
+      var panelConfig = "{{.panelConfig}}"
       `,
       minify: {
         removeComments: true,

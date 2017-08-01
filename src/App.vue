@@ -116,12 +116,32 @@
 
   export default {
     data(){
+
+      var panel = {};
+      if (Object.keys(JSON.parse(panelConfig)).length === 0) {
+        panel = {
+          "base_path": "/pkg",
+          "image_url": "$/images/bxh.jpg",
+          "height": "850px",
+          "width": "1304px",
+          "design": {
+            "path": [
+              0
+            ],
+            "text": "背景"
+          },
+          objects: []
+        }
+      } else {
+        panel = JSON.parse(panelConfig)
+      }
+
       return {
         showEdit: false,
         showAppend: false,
         showJSON: false,
-        panelConfig: JSON.parse(panelConfig),
-        json: panelConfig,
+        panelConfig: panel,
+        json: JSON.stringify(panel),
         treeData: {},
         object$Edit: {},
         path$Edit: []

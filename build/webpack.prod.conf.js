@@ -61,7 +61,7 @@ var webpackConfig = merge(baseWebpackConfig, {
       applicationRoot: "{{.applicationRoot}}",
       config: `
       var applicationRoot = "{{.applicationRoot}}"
-      var panelConfig = "{{.panelConfig}}"
+      var panelConfig = '{{.panelConfig}}'
       `,
       minify: {
         removeComments: true,
